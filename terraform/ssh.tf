@@ -17,7 +17,7 @@ resource "aws_instance" "jenkins_master_ssh" {
   connection {
     type = "ssh"
     user = "ubuntu"
-    private_key = "${path.cwd}/key.pem"
+    private_key = "${file("${path.cwd}/key.pem")}"
   }
   provisioner "remote-exec" {
          script = "script/wait_for_instance.sh"
