@@ -88,6 +88,6 @@
       args:
         chdir: "/opt/workdir/amazon-metal-ami-builder-master/packer"  
 
-    # - name: BUILD | copy ova to s3
-    #   shell:
-    #     cmd: aws s3 cp /opt/workdir/amazon-metal-ami-builder/packer/output-virtualbox-iso/*.ova s3://clerckj/packer-artefacts/
+    - name: BUILD | copy ova to s3
+      shell:
+        cmd: aws s3 cp /opt/workdir/amazon-metal-ami-builder/packer/output-virtualbox-iso/*.ova s3://clerckj/packer-artefacts/
