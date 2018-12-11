@@ -9,6 +9,14 @@ module "vpc" {
   vpc_cidr = "192.168.0.0/24"
 }
 
+data "terraform_remote_state" "amazon-metal-ami-builder" {
+  backend = "s3"
+  config {
+    bucket = "clerckj"
+    key    = "terraform-states/amazon-metal.tfstate"
+    region = "eu-west-1"
+  }
+}
 
 data "aws_ami" "amzn-linux" {
   most_recent = true
