@@ -52,7 +52,7 @@ resource "aws_route_table_association" "public1" {
 
 #DEFAULT NACL
 resource "aws_network_acl" "public" {
-  subnet_ids = ["${aws_subnet.public1.id}", "${aws_subnet.public2.id}"]
+  subnet_ids = ["${aws_subnet.public1.id}"]
   vpc_id     = "${aws_vpc.main.id}"
 
   ingress {
