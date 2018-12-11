@@ -10,8 +10,7 @@ module "vpc" {
 }
 
 terraform {
-  backend = "s3"
-  config {
+  backend "s3" {
     bucket = "clerckj"
     key    = "terraform-states/amazon-metal.tfstate"
     region = "eu-west-1"
