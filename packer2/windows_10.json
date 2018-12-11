@@ -1,0 +1,64 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "headless": "{{user `headless`}}",
+      "boot_wait": "2m",
+      "communicator": "winrm",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "format": "ova",
+      "guest_os_type": "Windows10_64",
+      "disk_size": "{{user `disk_size`}}",
+      "floppy_files": [
+        "{{user `autounattend`}}",
+        "./scripts/bootstrap.ps1"
+      ],
+      "winrm_insecure": "true",
+      "winrm_password": "vagrant",
+      "winrm_port": "5986",
+      "winrm_use_ssl": "true",
+      "winrm_username": "vagrant",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory_size`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpus`}}"
+        ]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "remote_path": "/tmp/script.bat",
+      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+      "scripts": [
+        "./scripts/disable-auto-logon.bat",
+        "./scripts/enable-rdp.bat",
+        "./scripts/compile-dotnet-assemblies.bat"
+      ]
+    }
+  ],
+  "post-processors": [
+  ],
+  "variables": {
+    "iso_url": "./iso/Win10_1803_English_x64.iso",
+    "iso_checksum_type": "sha1",
+    "iso_checksum": "08FBB24627FA768F869C09F44C5D6C1E53A57A6F",
+    "autounattend": "./answer_files/10/Autounattend.xml",
+    "headless": "true",
+    "cpus": "8",
+    "memory_size": "32768",
+    "disk_size": "61440"
+  }
+}
