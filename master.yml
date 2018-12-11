@@ -1,0 +1,42 @@
+# © 2018 Amazon Web Services, Inc. or its affiliates. All Rights Reserved. 
+# This AWS Content is provided subject to the terms of the AWS Customer Agreement 
+# available at http://aws.amazon.com/agreement or other written agreement between 
+# Customer and Amazon Web Services, Inc.
+
+- hosts: all
+  vars:
+    jenkins_repo_url: 'https://pkg.jenkins.io/redhat/jenkins.repo'
+    jenkins_repo_key_url: 'https://pkg.jenkins.io/redhat/jenkins.io.key'
+    jenkins_version: "2.141"
+  tasks:
+    - name: Add Jenkins repo
+      get_url:
+        url: "{{ jenkins_repo_url }}"
+        dest: /etc/yum.repos.d/jenkins.repo
+      become: true
+    - name: Add jenkins GPG KEY
+      rpm_key:
+        state: present
+        key: "{{ jenkins_repo_key_url }}" 
+      become: true
+    - name: Install our specific version of Jenkins.
+      package:
+        name: "jenkins-{{ jenkins_version }}-1.1.noarch"
+        state: present
+      become: true
+    - name: Install Java 1.8
+      package:
+        name: java-1.8.0
+        state: present
+      become: true
+    - name: Install Java 1.7
+      package:
+        name: java-1.7.0
+        state: absent
+      become: true
+    - name: Enable service
+      service:
+        name: jenkins
+        enabled: yes
+        state: started
+      become: true
