@@ -12,7 +12,10 @@ resource "aws_instance" "jenkins_master_ssh" {
 
   tags {
     Name = "Ansible+SSH"
-  }
+  },
+  provisioner "local-exec" {
+         command = "sleep 600; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos --private-key '${path.cwd}/key.pem' -i '${self.public_ip},' packer.yml"
+    }
 }
 
 resource "tls_private_key" "tmp_key" {
