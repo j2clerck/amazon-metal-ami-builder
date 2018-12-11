@@ -63,6 +63,14 @@
         state: mounted
         fstype: ext4
       become: true
+    - name: CONFIG | set permission on mountpoint
+      file:
+        path: /opt/workdir
+        state: directory
+        mode: 0755
+        owner: ubuntu
+        group: ubuntu
+      become: true
     - name: CONFIG | download packer
       unarchive:
         src: "{{ packer_url }}"

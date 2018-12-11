@@ -133,7 +133,7 @@
                     <CommandLine>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\bootstrap.ps1</CommandLine>
                     <Order>2</Order>
                 </SynchronousCommand>
-             <FirstLogonCommands>
+             </FirstLogonCommands>
             <ShowWindowsLive>false</ShowWindowsLive>
         </component>
     </settings>
