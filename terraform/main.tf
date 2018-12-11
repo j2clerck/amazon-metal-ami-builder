@@ -9,7 +9,7 @@ module "vpc" {
   vpc_cidr = "192.168.0.0/24"
 }
 
-data "terraform_remote_state" "amazon-metal-ami-builder" {
+terraform {
   backend = "s3"
   config {
     bucket = "clerckj"
