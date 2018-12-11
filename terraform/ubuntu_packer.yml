@@ -11,14 +11,14 @@
     github_repo_url: 'https://github.com/j2clerck/amazon-metal-ami-builder/archive/master.zip'
   gather_facts: no
   pre_tasks:
-    - name: Install Python2
+    - name: PRE | check python2 is installed or install it
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
       become: true
   tasks:
-    - name: Wait for system to become reachable over SSH
+    - name: PRE | wait for instance to be ready for SSH
       wait_for_connection:
         timeout: 900
-    - name: Install a list of packages
+    - name: INSTALL | install packages required
       apt:
         name: "{{ packages }}"
       vars:
@@ -30,28 +30,25 @@
         - virtualbox
         - awscli
       become: true
-    - name: Find available nvme partition
+    - name: CONFIG | find available nvme disk
       shell:
         cmd: nvme list | grep Instance | awk -F ' ' '{print $1}'
       register: nvme_part
       become: true
-    - name: "debug nvme"
-      debug:
-        msg: "{{ nvme_part }}"
-    - name: Create a partition on NVME
+    - name: CONFIG | Create a partition on NVME
       parted:
         device: "{{ nvme_part.stdout_lines[0] }}"
         number: 1
         state: present
       become: true
-    - name: format filesystem
+    - name: CONFIG | format filesystem
       filesystem:
         dev: "{{ nvme_part.stdout_lines[0] }}p1"
         force: yes
         fstype: ext4
       become: true
       ignore_errors: yes
-    - name: create folder
+    - name: CONFIG | create mountpoint
       file:
         path: /opt/workdir
         state: directory
@@ -59,47 +56,38 @@
         owner: ubuntu
         group: ubuntu
       become: true
-    - name: mount filesystem
+    - name: CONFIG | mount filesystem
       mount:
         path: /opt/workdir/
         src: "{{ nvme_part.stdout_lines[0] }}p1"
         state: mounted
         fstype: ext4
       become: true
-    - name: create folder
-      file:
-        path: /opt/workdir
-        state: directory
-        mode: 0755
-        owner: ubuntu
-        group: ubuntu
-      become: true
-    - name: Unzip packer
+    - name: CONFIG | download packer
       unarchive:
         src: "{{ packer_url }}"
-        dest: /opt/workdir/
+        dest: /usr/bin/
         remote_src: yes
       become: true
-    - name: Make packer executable
+    - name: CONFIG | make packer executable in /usr/bin
       file:
-        path: /opt/workdir/packer
+        path: /usr/bin/packer
         mode: 0755
       become: true
-    - name: Unzip Github Repo
+    - name: CONFIG | unzip Github Repo
       unarchive:
         src: "{{ github_repo_url }}"
         dest: /opt/workdir/
         remote_src: yes
-      become: true
-    - name: Copy Windows10 from S3
+    - name: CONFIG | download Windows10 ISO from S3
       shell:
         cmd: aws s3 cp {{ windows_10_iso_url }} /opt/workdir/amazon-metal-ami-builder-master/packer/iso/
-    # - name: build Windows 10
-    #   shell:
-    #     cmd: "/opt/workdir/packer build --only virtualbox-iso windows_10.json"
-    #   args:
-    #     chdir: "/opt/workdir/amazon-metal-ami-builder/packer/"  
+    - name: BUILD | build Windows 10
+      shell:
+        cmd: "packer build --only virtualbox-iso windows_10.json"
+      args:
+        chdir: "/opt/workdir/amazon-metal-ami-builder-master/packer"  
 
-    # - name: copy ova to s3
+    # - name: BUILD | copy ova to s3
     #   shell:
     #     cmd: aws s3 cp /opt/workdir/amazon-metal-ami-builder/packer/output-virtualbox-iso/*.ova s3://clerckj/packer-artefacts/

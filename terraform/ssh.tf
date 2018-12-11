@@ -13,8 +13,11 @@ resource "aws_instance" "jenkins_master_ssh" {
   tags {
     Name = "Ansible+SSH"
   },
+  provisioner "remote-exec" {
+         command = "script/wait_for_instance.sh"
+    },
   provisioner "local-exec" {
-         command = "sleep 600; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u centos --private-key '${path.cwd}/key.pem' -i '${self.public_ip},' packer.yml"
+         command = "sleep 30; ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu --private-key '${path.cwd}/key.pem' -i '${self.public_ip},' ubuntu_packer.yml"
     }
 }
 
