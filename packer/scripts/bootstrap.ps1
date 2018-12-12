@@ -88,13 +88,6 @@ $bootstrap_actions = @(
 
     },
     @{
-        name = "Install ENADrivers"
-        action = "install-zip"
-        url = "https://s3.amazonaws.com/ec2-windows-drivers-downloads/ENA/Latest/AwsEnaNetworkDriver.zip"
-        zip_file_pattern = "powershell.exe ./install.ps1"
-
-    },
-    @{
         name = "Configure WinRM"
         action = "winrm"
     }
