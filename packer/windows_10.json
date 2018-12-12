@@ -18,8 +18,8 @@
       ],
       "winrm_insecure": "true",
       "winrm_password": "vagrant",
-      "winrm_port": "5986",
-      "winrm_use_ssl": "true",
+      "winrm_port": "5985",
+      "winrm_use_ssl": "false",
       "winrm_username": "vagrant",
       "vboxmanage": [
         [
@@ -43,9 +43,6 @@
       "remote_path": "/tmp/script.bat",
       "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
       "scripts": [
-        "./scripts/disable-auto-logon.bat",
-        "./scripts/enable-rdp.bat",
-        "./scripts/compile-dotnet-assemblies.bat"
       ]
     }
   ],
@@ -57,8 +54,8 @@
     "iso_checksum": "08FBB24627FA768F869C09F44C5D6C1E53A57A6F",
     "autounattend": "./answer_files/10/Autounattend.xml",
     "headless": "true",
-    "cpus": "8",
-    "memory_size": "32768",
+    "cpus": "2",
+    "memory_size": "2048",
     "disk_size": "61440"
   }
 }

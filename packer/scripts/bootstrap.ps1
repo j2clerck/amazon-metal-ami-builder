@@ -90,16 +90,8 @@ $bootstrap_actions = @(
     @{
         name = "Install ENADrivers"
         action = "install-zip"
-        url = "https://s3.amazonaws.com/ec2-downloads-windows/EC2Config/EC2Install.zip"
-        zip_file_pattern = "Ec2Install.exe"
-        arguments = "/quiet"
-
-    },
-    @{
-        name = "Install ENADrivers"
-        action = "install-zip"
         url = "https://s3.amazonaws.com/ec2-windows-drivers-downloads/ENA/Latest/AwsEnaNetworkDriver.zip"
-        zip_file_pattern = "install.ps1"
+        zip_file_pattern = "powershell.exe ./install.ps1"
 
     },
     @{
@@ -155,8 +147,9 @@ for ($i = 0; $i -lt $actions.Count; $i++) {
                 $src = $current_action.file
             } else {
                 $src = $current_action.url.Split("/")[-1]
+                Invoke-WebRequest -Uri $current_action.url -OutFile "$tmp_dir\$src"
             }
-            $zip_src = "$script_dir\$src"
+            $zip_src = "$tmp_dir\$src"
             Extract-Zip -zip $zip_src -dest $tmp_dir
             $install_file = Get-Item -Path "$tmp_dir\$($current_action.zip_file_pattern)"
             if ($install_file -eq $null) {

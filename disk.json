@@ -1,0 +1,10 @@
+[
+  {
+    "Description": "Windows10",
+    "Format": "ova",
+    "UserBucket": {
+      "S3Bucket": "clerckj",
+      "S3Key": "vmimport/Windows_10_20181212.ova"
+    }
+  }
+]
