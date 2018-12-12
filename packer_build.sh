@@ -10,6 +10,7 @@ BUILD_VERSION="20181212"
 
 
 # SETUP ENVIRONMENT
+apt update
 apt -y install unzip awscli nvme-cli git virtualbox jq
 mkdir /opt/workdir/
 cd /opt/workdir
@@ -20,8 +21,8 @@ mv packer /usr/bin/
 
 # DOWNLOAD PACKER BUILD CONFIGURATION
 git clone $GITHUB_REPO
-cd amazon-ami-builder/packer/
-aws s3 cp $W10_URL ./iso/
+cd amazon-metal-ami-builder/packer/
+aws s3 cp $ISO_URL ./iso/
 
 # LAUNCH BUILD
 packer build --only virtualbox-iso $PACKER_BUILD_FILE

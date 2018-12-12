@@ -11,9 +11,11 @@
       "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
       "format": "ova",
       "guest_os_type": "Windows10_64",
+      "guest_additions_mode": "disable",
       "disk_size": "{{user `disk_size`}}",
       "floppy_files": [
         "{{user `autounattend`}}",
+        "./scripts/fixnetwork.ps1",
         "./scripts/bootstrap.ps1"
       ],
       "winrm_insecure": "true",
@@ -38,13 +40,6 @@
     }
   ],
   "provisioners": [
-    {
-      "type": "shell",
-      "remote_path": "/tmp/script.bat",
-      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
-      "scripts": [
-      ]
-    }
   ],
   "post-processors": [
   ],

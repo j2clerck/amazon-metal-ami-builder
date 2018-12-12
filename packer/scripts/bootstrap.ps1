@@ -79,14 +79,14 @@ if (-not (Test-Path -Path $tmp_dir)) {
 Write-Log -message "starting bootstrap.ps1 with action '$action'"
 
 $bootstrap_actions = @(
-    @{
+<#    @{
         name = "Install EC2Config"
         action = "install-zip"
         url = "https://s3.amazonaws.com/ec2-downloads-windows/EC2Config/EC2Install.zip"
         zip_file_pattern = "Ec2Install.exe"
         arguments = "/quiet"
 
-    },
+    },#>
     @{
         name = "Configure WinRM"
         action = "winrm"
@@ -194,6 +194,11 @@ for ($i = 0; $i -lt $actions.Count; $i++) {
                 Write-Log -message $error_message -level "ERROR"
                 throw $error_message
             }
+
+            Write-Log -message "Enabling Windows Firewall"
+            Enable-PSRemote -force
+            &cmd.exe /c netsh advfirewall firewall set rule group="remote administration" new enable=yes
+            &cmd.exe /c netsh firewall add portopening TCP 5986 "Port 5986"
         }
     }
 }
