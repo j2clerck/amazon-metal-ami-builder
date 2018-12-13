@@ -44,8 +44,7 @@
       "type": "powershell",
       "scripts": 
       [
-        "scripts/install_aws_components.ps1",
-        "scripts/cleanup.ps1"
+        "scripts/install_aws_components.ps1"
       ]
     }
   ],

@@ -48,7 +48,7 @@ $src = $url.Split("/")[-1]
 Invoke-WebRequest -Uri $url -OutFile "$tmp_dir\$src"
 $zip_src = "$tmp_dir\$src"
 Extract-Zip -zip $zip_src -dest $tmp_dir
-&cmd.exe /c "$tmp_dir\$src" /quiet
+&cmd.exe /c "$tmp_dir\EC2Install.exe" /quiet
 
 #Install ENA Drivers
 $url = "https://s3.amazonaws.com/ec2-windows-drivers-downloads/ENA/Latest/AwsEnaNetworkDriver.zip"
@@ -56,6 +56,6 @@ $src = $url.Split("/")[-1]
 Invoke-WebRequest -Uri $url -OutFile "$tmp_dir\$src"
 $zip_src = "$tmp_dir\$src"
 Extract-Zip -zip $zip_src -dest $tmp_dir
-& "$tmp_dir\$src"
+& "$tmp_dir\install.ps1"
 
 
