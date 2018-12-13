@@ -1,4 +1,5 @@
 $ErrorActionPreference = "Stop"
+Function Remove-StoreApp{
     $apps = @(
         "Microsoft.3DBuilder",
         "Microsoft.Appconnector",
@@ -69,15 +70,28 @@ $ErrorActionPreference = "Stop"
         "89006A2E.AutodeskSketchBook",
         "D5EA27B7.Duolingo-LearnLanguagesforFree",
         "46928bounde.EclipseManager",
-        "ActiproSoftwareLLC.562882FEEB491"
+        "ActiproSoftwareLLC.562882FEEB491",
+        "Fitbit.FitbitCoach",
+        "Microsoft.BingWeather",
+        "Netflix"
     )
     foreach ($app in $apps) {
-        Get-AppxPackage -Name $app -AllUsers | Remove-AppxPackage -AllUsers
+        Write-Host $app
+        Try{
+            Get-AppxPackage -Name $app -AllUsers | %{Remove-AppxPackage -AllUsers $_}
+        }
+        Catch{
+            Write-Host $_
+        }
         Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -like $app } | Remove-AppxProvisionedPackage -Online
     }
+}
 
-#Set registry to prevent Consumer Features
-#$path = "HKLM:\SOFTWARE\Policies\Microsoft\Windows\Cloud Content"
-#$name = "DisableWindowsConsumerFeatures"
-#$value = 1
-#$type = "DWORD"
+Remove-StoreApp
+Start-Sleep 5
+Remove-StoreApp
+Start-Sleep 5
+Remove-StoreApp
+
+#Remove OneDrive 
+&cmd.exe /c %SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall
