@@ -1,0 +1,29 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: >
+  This template deploys an i3.metal in a subnet that must be able to reach Internet
+  The i3.metal instance then install VirtualBox and leverage packer for OS build
+  At the end of the build, the OVA is uploaded to S3
+
+Metadata:
+Parameters:
+  VPC:
+    Type:
+Resource:
+  rInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0b12a376
+      InstanceType: m5.xlarge
+      SecurityGroupIds:
+        - 
+      SubnetId:
+      UserData:
+      
+  rBuilderSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      GroupName: BuilderSG
+      GroupDescription: BuilderSG with no inbound traffic
+      VpcId: !Ref VPC 
+

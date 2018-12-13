@@ -1,0 +1,5 @@
+*.iso
+*.retry
+packer/iso/Win10_1803_English_x64.iso
+packer/output*
+packer/output-virtualbox-iso/*

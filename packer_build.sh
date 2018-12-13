@@ -23,6 +23,11 @@ mv packer /usr/bin/
 git clone $GITHUB_REPO
 cd amazon-metal-ami-builder/packer/
 aws s3 cp $ISO_URL ./iso/
+if [ $? -ne 0 ]
+then
+    echo "Unable to download iso"
+    exit 1
+fi
 
 # LAUNCH BUILD
 packer build --only virtualbox-iso $PACKER_BUILD_FILE
@@ -55,8 +60,8 @@ EOF
 
 ImportTaskId=`aws ec2 import-image \
     --architecture x86_64 \
-    --description "Import packer build of ${BUILD_NAME}_${BUILD_VERSION}" \
-    --license-type AUTO \
+    --description "Import packer build of Windows10_20181212" \
+    --license-type BYOL \
     --platform Windows \
     --disk-containers file://disk.json \
     --output json \

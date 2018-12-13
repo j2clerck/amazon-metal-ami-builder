@@ -16,7 +16,7 @@ Remove-Item -Path WSMan:\Localhost\listener\listener* -Recurse
 Disable-NetFirewallRule -DisplayName "Windows Remote Management (HTTP-In)"
 
 New-Item -Path WSMan:\LocalHost\Listener -Transport HTTPS -Address * -CertificateThumbPrint $Cert.Thumbprint -Force
-&cmd.exe /c winrm set "winrm/config/service/auth" '@{Basic="true"}'
+&cmd.exe /c winrm set winrm/config/service/auth @{Basic="true"}
 New-NetFirewallRule -DisplayName "Windows Remote Management (HTTPS-In)" -Name "Windows Remote Management (HTTPS-In)" -Profile Any -LocalPort 5986 -Protocol TCP
 
 #Restart the service to use the HTTPS Listener

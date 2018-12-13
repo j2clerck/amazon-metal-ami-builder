@@ -1,0 +1,43 @@
+version: 0.2
+
+run-as: Linux-user-name
+
+env:
+  variables:
+    vpcid: "value"
+    subnetid: "value"
+
+phases:
+  install:
+    run-as: Linux-user-name
+    commands:
+      - command
+      - command
+    finally:
+      - command
+      - command
+  pre_build:
+    run-as: Linux-user-name
+    commands:
+      - command
+      - command
+    finally:
+      - command
+      - command
+  build:
+    run-as: Linux-user-name
+    commands:
+      - command
+      - command
+    finally:
+      - command
+      - command
+  post_build:
+    run-as: Linux-user-name
+    commands:
+      - command
+      - command
+    finally:
+      - command
+      - command
+

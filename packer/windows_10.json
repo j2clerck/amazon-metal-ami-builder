@@ -20,8 +20,8 @@
       ],
       "winrm_insecure": "true",
       "winrm_password": "vagrant",
-      "winrm_port": "5985",
-      "winrm_use_ssl": "false",
+      "winrm_port": "5986",
+      "winrm_use_ssl": "true",
       "winrm_username": "vagrant",
       "vboxmanage": [
         [
@@ -40,6 +40,14 @@
     }
   ],
   "provisioners": [
+    {
+      "type": "powershell",
+      "scripts": 
+      [
+        "scripts/install_aws_components.ps1",
+        "scripts/cleanup.ps1"
+      ]
+    }
   ],
   "post-processors": [
   ],
