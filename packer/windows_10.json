@@ -44,6 +44,7 @@
       "type": "powershell",
       "scripts": 
       [
+        "scripts/dis-updates.ps1",
         "scripts/install_aws_components.ps1",
         "scripts/cleanup.ps1",
         "scripts/disable-auto-logon.ps1"
