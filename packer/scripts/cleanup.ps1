@@ -90,8 +90,6 @@ Function Remove-StoreApp{
 Remove-StoreApp
 Start-Sleep 5
 Remove-StoreApp
-Start-Sleep 5
-Remove-StoreApp
 
 #Remove OneDrive 
 &cmd.exe /c %SystemRoot%\SysWOW64\OneDriveSetup.exe /uninstall
