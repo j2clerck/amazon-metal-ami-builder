@@ -2,15 +2,15 @@ version: 0.2
 
 env:
   variables:
-    vpcid: "vpc-389d155e"
-    subnetid: "subnet-342b346f"
+    VPCID: "vpc-389d155e"
+    SUBNETID: "subnet-342b346f"
 
 phases:
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Windows 10 image...          
-      - aws cloudformation deploy --stack-name "Windows-10-Build" --template-file ./cfn_builder.yml --parameter-overrides VPC=${vpcid} Subnet=${subnetid} --region eu-west-1  
+      - aws cloudformation deploy --stack-name "Windows-10-Build" --template-file ./cfn_builder.yml --parameter-overrides VPC=$VPCID Subnet=$SUBNETID --region eu-west-1  
   post_build:
     commands:
       - echo Build completed on `date`
