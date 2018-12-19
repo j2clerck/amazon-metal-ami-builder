@@ -43,7 +43,6 @@ Resources:
           mkfs.ext4 ${!DEVICE}p1
           mkdir /opt/workdir/
           mount ${!DEVICE}p1 /opt/workdir
-          
   rBuilderSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties: 
