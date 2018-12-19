@@ -37,7 +37,12 @@ Resources:
           # SETUP ENVIRONMENT
           apt update
           apt -y install unzip awscli nvme-cli git virtualbox jq
+          DEVICE=`nvme list | grep Instance -m 1 | awk -F ' ' '{ print $1 }'`
+          parted --script $DEVICE mklabel gpt
+          parted --script $DEVICE mkpart primary 0% 100%
+          mkfs.ext4 ${!DEVICE}p1
           mkdir /opt/workdir/
+          mount ${!DEVICE}p1 /opt/workdir
           cd /opt/workdir
           wget $PACKER_URL
           unzip packer_1.3.3_linux_amd64.zip
