@@ -37,61 +37,13 @@ Resources:
           # SETUP ENVIRONMENT
           apt update
           apt -y install unzip awscli nvme-cli git virtualbox jq
-          DEVICE=`nvme list | grep Instance -m 1 | awk -F ' ' '{ print $1 }'`
+          DEVICE=$(nvme list | grep Instance -m 1 | awk -F ' ' '{ print $1 }')
           parted --script $DEVICE mklabel gpt
           parted --script $DEVICE mkpart primary 0% 100%
           mkfs.ext4 ${!DEVICE}p1
           mkdir /opt/workdir/
           mount ${!DEVICE}p1 /opt/workdir
-          cd /opt/workdir
-          wget $PACKER_URL
-          unzip packer_1.3.3_linux_amd64.zip
-          chmod +x packer
-          mv packer /usr/bin/
-          # DOWNLOAD PACKER BUILD CONFIGURATION
-          git clone $GITHUB_REPO
-          cd amazon-metal-ami-builder/packer/
-          aws s3 cp $ISO_URL ./iso/
-          if [ $? -ne 0 ]
-          then
-              echo "Unable to download iso"
-              exit 1
-          fi
-          # LAUNCH BUILD
-          packer build --only virtualbox-iso $PACKER_BUILD_FILE
-          if [ $? -ne 0 ]
-          then
-              echo "Packer build failed"
-              exit 1
-          fi
-          # UPLOAD OUTPUT TO S3
-          aws s3 cp output-virtualbox-iso/*.ova s3://clerckj/vmimport/${!BUILD_NAME}_${!BUILD_VERSION}.ova
-          if [ $? -ne 0 ]
-          then
-              echo "Upload to S3 failed"
-              exit 1
-          fi
-          # LAUNCH VM IMPORT
-          cat << EOF > disk.json
-          [
-            {
-              "Description": "Windows10",
-              "Format": "ova",
-              "UserBucket": {
-                "S3Bucket": "clerckj",
-                "S3Key": "vmimport/${!BUILD_NAME}_${!BUILD_VERSION}.ova"
-              }
-            }
-          ]
-          EOF
-          ImportTaskId=`aws ec2 import-image --architecture x86_64 --description "Import packer build of Windows10_20181212" --license-type BYOL --platform Windows --disk-containers file://disk.json --output json --region $EC2_REGION | jq .ImportTaskId`
-          if [ $? -ne 0 ]
-          then
-              echo "Start import task failed"
-              exit 1
-          fi
-          echo "Task id is ${!ImportTaskId}. Run aws ec2 describe-import-image-tasks --import-task-ids ${!ImportTaskId} --region ${!EC2_REGION}"
-          curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "SUCCESS","Reason" : "Configuration Complete","UniqueId" : "ID1234","Data" : "Application has completed configuration."}' ${!SIGNAL_URL}
+          
   rBuilderSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties: 
