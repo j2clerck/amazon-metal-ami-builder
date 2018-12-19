@@ -6,10 +6,6 @@ env:
     subnetid: "subnet-342b346f"
 
 phases:
-  prebuild:
-    commands:
-      - echo Checking that there is no current stack
-      - $(aws describe-stacks --stack-name "Windows-10-Build")
   build:
     commands:
       - echo Build started on `date`
