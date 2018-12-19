@@ -16,7 +16,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       ImageId: ami-00035f41c82244dab
-      InstanceType: i3.metal
+      InstanceType: m5d.large
       IamInstanceProfile: ec2-poweruser
       SecurityGroupIds:
         - !Ref rBuilderSG
