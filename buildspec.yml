@@ -1,43 +1,23 @@
 version: 0.2
 
-run-as: Linux-user-name
-
 env:
   variables:
     vpcid: "value"
     subnetid: "value"
 
 phases:
-  install:
-    run-as: Linux-user-name
+  prebuild:
     commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
-  pre_build:
-    run-as: Linux-user-name
-    commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
+      - echo Checking that there is no current stack
+      - $(aws describe-stacks --stack-name "Windows-10-Build")
   build:
-    run-as: Linux-user-name
     commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
+      - echo Build started on `date`
+      - echo Building the Windows 10 image...          
+      - aws cloudformation deploy --stack-name "Windows-10-Build" --template-file ./cfn_builder.yml --parameter-overrides VPC=${vpcid} Subnet=${subnetid} --region eu-west-1  
   post_build:
-    run-as: Linux-user-name
     commands:
-      - command
-      - command
-    finally:
-      - command
-      - command
+      - echo Build completed on `date`
+      - echo Deleting the build stack
+      - aws cloudformation delete-stack --stack-name "Windows-10-Build" --region eu-west-1
 
