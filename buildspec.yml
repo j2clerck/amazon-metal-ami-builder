@@ -2,8 +2,8 @@ version: 0.2
 
 env:
   variables:
-    vpcid: "value"
-    subnetid: "value"
+    vpcid: "vpc-389d155e"
+    subnetid: "subnet-342b346f"
 
 phases:
   prebuild:
