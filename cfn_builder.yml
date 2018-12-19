@@ -33,6 +33,7 @@ Resources:
           BUILD_VERSION="20181212"
           EC2_AVAIL_ZONE=`curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone`
           EC2_REGION="`echo \"$EC2_AVAIL_ZONE\" | sed 's/[a-z]$//'`"
+          SIGNAL_URL=${rWaitHandle}
           # SETUP ENVIRONMENT
           apt update
           apt -y install unzip awscli nvme-cli git virtualbox jq
@@ -85,10 +86,20 @@ Resources:
               exit 1
           fi
           echo "Task id is ${!ImportTaskId}. Run aws ec2 describe-import-image-tasks --import-task-ids ${!ImportTaskId} --region ${!EC2_REGION}"
+          curl -X PUT -H 'Content-Type:' --data-binary '{"Status" : "SUCCESS","Reason" : "Configuration Complete","UniqueId" : "ID1234","Data" : "Application has completed configuration."}' ${!SIGNAL_URL}
   rBuilderSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties: 
       GroupName: BuilderSG
       GroupDescription: BuilderSG with no inbound traffic
-      VpcId: !Ref VPC 
+      VpcId: !Ref VPC
+  rWaitHandle:
+    Type: AWS::CloudFormation::WaitConditionHandle
+  rWaitCondition:
+    Type: AWS::CloudFormation::WaitCondition
+    DependsOn: rInstance
+    Properties:
+      Handle: !Ref rWaitHandle
+      Timeout: "3600"
+
 
