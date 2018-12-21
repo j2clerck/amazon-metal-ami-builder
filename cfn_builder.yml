@@ -101,14 +101,16 @@ Resources:
           ]
           EOF
           ImportTaskId=$(aws ec2 import-image --architecture x86_64 --description "Import packer build of ${!BUILD_NAME}_${!BUILD_VERSION}" --license-type BYOL --platform Windows --disk-containers file://disk.json --output json --region $EC2_REGION | jq -r .ImportTaskId)
-          if [ $? -ne 0 ]
+          if [[ $ImportTaskId == import-ami-* ]]
           then
+              echo "Start import task success"
+              callback "SUCCESS" "Build complete" ${!SIGNAL_URL} 
+              exit 0
+          else
               echo "Start import task failed"
               callback "FAILURE" "Unable to start import task" ${!SIGNAL_URL} 
               exit 1
-          fi
-          echo "Task id is ${!ImportTaskId}. Run aws ec2 describe-import-image-tasks --import-task-ids ${!ImportTaskId} --region ${!EC2_REGION}"
-          callback "SUCCESS" "Build complete" ${!SIGNAL_URL}
+          fi          
   rBuilderSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties: 
